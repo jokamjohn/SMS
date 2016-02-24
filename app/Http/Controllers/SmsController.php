@@ -53,11 +53,14 @@ class SmsController extends Controller
     public function store(Request $request)
     {
         $phoneNumber = $request['phoneNumber'];
+
         $message = $request['message'];
 
         $this->sms->send($phoneNumber, $message);
 
-        return 'message sent';
+        $this->sms->save($request);
+
+        return redirect()->back();
 
     }
 

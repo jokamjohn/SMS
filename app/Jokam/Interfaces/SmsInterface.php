@@ -26,4 +26,10 @@ interface SmsInterface
      */
     public function receive(Request $request);
 
+    /**Save the sent message in the database.
+     *
+     * @param Request $request
+     */
+    public function save(Request $request);
+
 }

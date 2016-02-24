@@ -3,6 +3,7 @@
 namespace Jokam\Repositories;
 
 
+use App\Message;
 use App\Sms;
 use Illuminate\Http\Request;
 use Jokam\AfricasTalkingGateway;
@@ -74,6 +75,20 @@ class SmsRepository implements SmsInterface
 
         $sms->save();
 
-        Log::debug('new sms saved: '.$sms->toArray());
+        Log::debug('new sms saved: ' . $sms->toArray());
+    }
+
+    /**Save the sent message in the database.
+     *
+     * @param Request $request
+     */
+    public function save(Request $request)
+    {
+        $sms = new Message();
+
+        $sms->phoneNumber = $request->get('phoneNumber');
+        $sms->message = $request->get('message');
+
+        $sms->save();
     }
 }
