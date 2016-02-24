@@ -10,7 +10,7 @@ return [
    | This is the AfricasTalking username
    */
 
-    'username'   =>env('SMS_USERNAME','username'),
+    'username' => env('SMS_USERNAME'),
 
     /*
     |--------------------------------------------------------------------------
@@ -20,6 +20,27 @@ return [
     | This is the AfricasTalking user Api key
     */
 
-    'api_key'   =>env('SMS_API_KEY','SomeRandomString'),
+    'api_key' => env('SMS_API_KEY'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Africa is Talking short code
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+
+    'short_code' => env('SMS_SHORT_CODE'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Africa is Talking short code
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+
+    'keyword' => env('SMS_KEYWORD')
+
 
 ];

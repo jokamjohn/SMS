@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Jokam\Interfaces\SmsInterface;
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Jokam\Interfaces\SmsInterface;
 
 class SmsController extends Controller
 {
@@ -13,7 +12,7 @@ class SmsController extends Controller
     /**
      * @var SmsInterface
      */
-    private $makesms;
+    private $sms;
 
     /**
      * SmsController constructor.
@@ -22,7 +21,7 @@ class SmsController extends Controller
      */
     public function __construct(SmsInterface $makesms)
     {
-        $this->makesms = $makesms;
+        $this->sms = $makesms;
     }
 
     /**
@@ -48,7 +47,7 @@ class SmsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -56,7 +55,7 @@ class SmsController extends Controller
         $phoneNumber = $request['phoneNumber'];
         $message = $request['message'];
 
-        $this->makesms->sendSms($phoneNumber,$message);
+        $this->sms->send($phoneNumber, $message);
 
         return 'message sent';
 
@@ -65,7 +64,7 @@ class SmsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -76,7 +75,7 @@ class SmsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -87,8 +86,8 @@ class SmsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -99,7 +98,7 @@ class SmsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

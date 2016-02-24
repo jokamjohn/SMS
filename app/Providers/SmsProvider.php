@@ -24,7 +24,7 @@ class SmsProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('Jokam\AfricasTalkingGateway', function($app){
+        $this->app->bind('Jokam\AfricasTalkingGateway', function(){
             $username = config('sms.username');
             $api_key = config('sms.api_key');
 
