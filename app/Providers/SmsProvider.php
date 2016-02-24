@@ -32,7 +32,7 @@ class SmsProvider extends ServiceProvider
         });
 
         $this->app->bind('Jokam\Interfaces\SmsInterface',
-            'Jokam\Repositories\MakeSms');
+            'Jokam\Repositories\SmsRepository');
 
         $this->app->bind('sms','Jokam\AfricasTalkingGateway');
     }

@@ -61,7 +61,7 @@ class SmsRepository implements SmsInterface
         $text = $request->get('text');
         $date = $request->get('date');
         $id = $request->get('id');
-        $linkId = $request->get('linkId'); //This works for onDemand subscription products
+//        $linkId = $request->get('linkId'); //This works for onDemand subscription products
 
         $sms = new Sms();
 
@@ -70,7 +70,7 @@ class SmsRepository implements SmsInterface
         $sms->message = $text;
         $sms->messageId = $id;
         $sms->date = $date;
-        $sms->linkId = $linkId;
+//        $sms->linkId = $linkId;
 
         $sms->save();
 

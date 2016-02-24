@@ -9,6 +9,8 @@
 namespace Jokam\Interfaces;
 
 
+use Illuminate\Http\Request;
+
 interface SmsInterface
 {
     /**Method to send a message
@@ -17,5 +19,11 @@ interface SmsInterface
      * @return mixed
      */
     public function send($recipients, $message);
+
+    /**Receive a message and save it to the database.
+     *
+     * @param Request $request
+     */
+    public function receive(Request $request);
 
 }
