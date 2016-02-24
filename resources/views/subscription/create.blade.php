@@ -2,7 +2,7 @@
 
 @section('body')
 
-    {!! Form::open([ 'route' => 'sms.subscription.store', 'method' => 'POST' ])!!}
+    {!! Form::open([ 'route' => 'subscription.store', 'method' => 'POST' ])!!}
 
     <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
 

@@ -16,4 +16,4 @@ Route::get('/', function () {
 });
 
 Route::resource('sms','SmsController');
-Route::resource('sms/subscription','SmsSubscriptionController');
+Route::resource('subscription','SmsSubscriptionController');

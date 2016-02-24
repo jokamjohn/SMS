@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use Jokam\Interfaces\SmsInterface;
+use Jokam\Subscription;
 
 class SmsSubscriptionController extends Controller
 {
@@ -12,14 +13,19 @@ class SmsSubscriptionController extends Controller
      * @var SmsInterface
      */
     private $sms;
+    /**
+     * @var Subscription
+     */
+    private $subscription;
 
     /**
      * SmsSubscriptionController constructor.
      * @param SmsInterface $sms
      */
-    public function __construct(SmsInterface $sms)
+    public function __construct(SmsInterface $sms,Subscription $subscription)
     {
         $this->sms = $sms;
+        $this->subscription = $subscription;
     }
 
     /**
@@ -29,7 +35,7 @@ class SmsSubscriptionController extends Controller
      */
     public function index()
     {
-        //
+        return $this->subscription->subscriptions();
     }
 
     /**

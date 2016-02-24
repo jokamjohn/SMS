@@ -57,6 +57,7 @@ class SmsRepository implements SmsInterface
      */
     public function receive(Request $request)
     {
+
         $from = $request->get('from');
         $to = $request->get('to');
         $text = $request->get('text');

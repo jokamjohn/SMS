@@ -90,26 +90,28 @@ class Subscription
      */
     public function subscriptions()
     {
+        \Log::debug('begin fetch');
         try {
 
             $lastReceivedId = 0;
-
+            \Log::debug('start fetch');
             do {
 
                 $results = $this->gateway->fetchPremiumSubscriptions($this->shortCode, $this->keyword, $lastReceivedId);
-//                foreach ($results as $result) {
-//
-//                    echo "\n";
-//                    $lastReceivedId = $result->id;
-//
-//                    $message = " From: " . $result->phoneNumber . " id: " . $result->id;
-//
-//                    return $message;
-//                }
-                return $results;
+                foreach ($results as $result) {
+
+                    echo "\n";
+                    $lastReceivedId = $result->id;
+
+                    $message = " From: " . $result->phoneNumber . " id: " . $result->id;
+                    \Log::debug('message fetch');
+                    return $message;
+                }
+//                return $results;
 
             } while (count($results) > 0);
 
+            \Log::debug('done fetch');
             //TODO Be sure to save lastReceivedId here for next time.
 
         } catch (AfricasTalkingGatewayException $e) {
