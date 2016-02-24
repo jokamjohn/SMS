@@ -14,12 +14,12 @@ class CreateSmsTable extends Migration
     {
         Schema::create('sms', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('from');
-            $table->string('to');
-            $table->text('message');
-            $table->string('date');
-            $table->string('messageId');
-            $table->string('linkId');
+            $table->string('from')->nullable();
+            $table->string('to')->nullable();
+            $table->text('message')->nullable();
+            $table->string('date')->nullable();
+            $table->string('messageId')->nullable();
+            $table->string('linkId')->nullable();
             $table->timestamps();
         });
     }

@@ -63,6 +63,7 @@ class SmsRepository implements SmsInterface
         $date = $request->get('date');
         $id = $request->get('id');
 //        $linkId = $request->get('linkId'); //This works for onDemand subscription products
+        Log::debug('new sms received');
 
         $sms = new Sms();
 
@@ -75,7 +76,7 @@ class SmsRepository implements SmsInterface
 
         $sms->save();
 
-        Log::debug('new sms saved: ' . $sms->toArray());
+        Log::debug('new sms saved');
     }
 
     /**Save the sent message in the database.
