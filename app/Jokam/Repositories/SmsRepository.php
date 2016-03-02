@@ -20,14 +20,20 @@ class SmsRepository implements SmsInterface
      *
      */
     private $gateway;
+    /**
+     * @var Inbox
+     */
+    private $inbox;
 
     /**
      * MakeSms constructor.
      * @param AfricasTalkingGateway $gateway
+     * @param Inbox $inbox
      */
-    public function __construct(AfricasTalkingGateway $gateway)
+    public function __construct(AfricasTalkingGateway $gateway, Inbox $inbox)
     {
         $this->gateway = $gateway;
+        $this->inbox = $inbox;
     }
 
     /**Send a message
@@ -133,7 +139,7 @@ class SmsRepository implements SmsInterface
     private function lastReceivedId()
     {
         $count = Inbox::count();
-        $last = Inbox::last();
+        $last = $this->inbox->last();
         $lastReceivedId = $last->lastReceivedId;
 
         if ($count > 0) {
