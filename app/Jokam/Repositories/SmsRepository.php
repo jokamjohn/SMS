@@ -139,11 +139,10 @@ class SmsRepository implements SmsInterface
     private function lastReceivedId()
     {
         $count = Inbox::count();
-        $last = $this->inbox->last();
-        $lastReceivedId = $last->lastReceivedId;
 
         if ($count > 0) {
-            $this->lastReceivedId = $lastReceivedId;
+            $last = $this->inbox->all()->last();
+            $this->lastReceivedId = $last->lastReceivedId;
         } else {
             $this->lastReceivedId = 0;
         }
