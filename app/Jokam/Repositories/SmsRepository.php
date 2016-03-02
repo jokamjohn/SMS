@@ -114,6 +114,7 @@ class SmsRepository implements SmsInterface
                 $results = $this->gateway->fetchMessages($this->lastReceivedId);
 
                 foreach ($results as $result) {
+                    Log::debug("Results got");
 
                     $inbox = new Inbox();
                     $inbox->from = $result->from;
@@ -142,9 +143,12 @@ class SmsRepository implements SmsInterface
 
         if ($count > 0) {
             $last = $this->inbox->all()->last();
-            $this->lastReceivedId = $last->lastReceivedId;
+            $lastReceivedId = $last->lastReceivedId;
+            Log::debug("LastId: " . $lastReceivedId);
+            $this->lastReceivedId = $lastReceivedId;
         } else {
-            $this->lastReceivedId = 0;
+            $lastId = $this->lastReceivedId = 0;
+            Log::debug('Last Id: ' . $lastId);
         }
     }
 }
