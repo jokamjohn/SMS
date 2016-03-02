@@ -32,4 +32,9 @@ interface SmsInterface
      */
     public function save(Request $request);
 
+    /**
+     * Fetch messages from the account dashboard or your account.
+     */
+    public function fetch();
+
 }

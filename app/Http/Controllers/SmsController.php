@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use Jokam\Interfaces\SmsInterface;
+use Log;
 
 class SmsController extends Controller
 {
@@ -41,6 +42,10 @@ class SmsController extends Controller
      */
     public function create()
     {
+        $this->sms->fetch();
+
+        Log::debug('messages fetched');
+
         return view('sms.create');
     }
 

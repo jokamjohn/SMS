@@ -3,6 +3,7 @@
 namespace Jokam\Repositories;
 
 
+use App\Inbox;
 use App\Message;
 use App\Sms;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use Log;
 
 class SmsRepository implements SmsInterface
 {
+    private $lastReceivedId;
     /**
      * @var AfricasTalkingGateway
      *
@@ -90,7 +92,54 @@ class SmsRepository implements SmsInterface
 
         $sms->phoneNumber = $request->get('phoneNumber');
         $sms->message = $request->get('message');
-
         $sms->save();
+    }
+
+    /**
+     * Fetch messages from the account dashboard or your account.
+     */
+    public function fetch()
+    {
+        $this->lastReceivedId();
+
+        try {
+            do {
+
+                $results = $this->gateway->fetchMessages($this->lastReceivedId);
+
+                foreach ($results as $result) {
+
+                    $inbox = new Inbox();
+                    $inbox->from = $result->from;
+                    $inbox->to = $result->to;
+                    $inbox->message = $result->text;
+                    $inbox->date = $result->date;
+                    $inbox->linkId = $result->linkId;
+                    $inbox->lastReceivedId = $result->id;
+                    $inbox->save();
+                }
+
+            } while (count($results) > 0);
+
+        } catch (AfricasTalkingGatewayException $e) {
+            echo "Encountered an error: " . $e->getMessage();
+        }
+    }
+
+    /**
+     * Get the last received message Id.
+     *
+     */
+    private function lastReceivedId()
+    {
+        $count = Inbox::count();
+        $last = Inbox::last();
+        $lastReceivedId = $last->lastReceivedId;
+
+        if ($count > 0) {
+            $this->lastReceivedId = $lastReceivedId;
+        } else {
+            $this->lastReceivedId = 0;
+        }
     }
 }
