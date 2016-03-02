@@ -14,7 +14,7 @@ class CreateMessagesInbox extends Migration
     {
         Schema::create('inbox', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('from')->nullable();
+            $table->string('fromNumber')->nullable();
             $table->string('to')->nullable();
             $table->text('message')->nullable();
             $table->string('date')->nullable();

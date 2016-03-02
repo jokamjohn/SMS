@@ -76,7 +76,7 @@ class SmsRepository implements SmsInterface
 
         $sms = new Sms();
 
-        $sms->from = $from;
+        $sms->fromNumber = $from;
         $sms->to = $to;
         $sms->message = $text;
         $sms->messageId = $id;
@@ -117,7 +117,7 @@ class SmsRepository implements SmsInterface
                     Log::debug("Results got");
 
                     $inbox = new Inbox();
-                    $inbox->from = $result->from;
+                    $inbox->fromNumber = $result->from;
                     $inbox->to = $result->to;
                     $inbox->message = $result->text;
                     $inbox->date = $result->date;
