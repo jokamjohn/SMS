@@ -18,7 +18,7 @@ class CreateSmsTable extends Migration
             $table->string('to')->nullable();
             $table->text('message')->nullable();
             $table->string('date')->nullable();
-            $table->string('messageId')->nullable();
+            $table->string('messageId')->unique()->nullable();
             $table->string('linkId')->nullable();
             $table->timestamps();
         });

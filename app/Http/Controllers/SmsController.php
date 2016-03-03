@@ -50,10 +50,6 @@ class SmsController extends Controller
      */
     public function create()
     {
-        $this->sms->fetch();
-
-        Log::debug('messages fetched');
-
         return view('sms.create');
     }
 

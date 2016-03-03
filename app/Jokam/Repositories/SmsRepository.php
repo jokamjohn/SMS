@@ -79,7 +79,6 @@ class SmsRepository implements SmsInterface
      */
     public function receive(Request $request)
     {
-
         $from = $request->get('from');
         $to = $request->get('to');
         $text = $request->get('text');
@@ -124,7 +123,6 @@ class SmsRepository implements SmsInterface
             foreach ($results as $result) {
                 $this->inboxMessage($result);
             }
-
         } catch (AfricasTalkingGatewayException $e) {
             echo "Encountered an error: " . $e->getMessage();
         }

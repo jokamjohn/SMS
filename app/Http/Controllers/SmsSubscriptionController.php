@@ -12,7 +12,7 @@ class SmsSubscriptionController extends Controller
     /**
      * @var SmsInterface
      */
-    private $sms;
+    private $repository;
     /**
      * @var Subscription
      */
@@ -20,12 +20,12 @@ class SmsSubscriptionController extends Controller
 
     /**
      * SmsSubscriptionController constructor.
-     * @param SmsInterface $sms
+     * @param SmsInterface $repository
      * @param Subscription $subscription
      */
-    public function __construct(SmsInterface $sms,Subscription $subscription)
+    public function __construct(SmsInterface $repository, Subscription $subscription)
     {
-        $this->sms = $sms;
+        $this->repository = $repository;
         $this->subscription = $subscription;
     }
 
@@ -57,7 +57,7 @@ class SmsSubscriptionController extends Controller
      */
     public function store(Request $request)
     {
-        $this->sms->receive($request);
+        $this->repository->receive($request);
 
         return redirect()->back();
     }
