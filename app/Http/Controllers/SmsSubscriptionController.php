@@ -21,6 +21,7 @@ class SmsSubscriptionController extends Controller
     /**
      * SmsSubscriptionController constructor.
      * @param SmsInterface $sms
+     * @param Subscription $subscription
      */
     public function __construct(SmsInterface $sms,Subscription $subscription)
     {

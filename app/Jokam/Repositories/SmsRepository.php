@@ -25,6 +25,18 @@ class SmsRepository implements SmsInterface
      */
     private $inbox;
 
+    /**Short code.
+     *
+     * @var
+     */
+    private $shortCode;
+
+    /**Keyword.
+     *
+     * @var
+     */
+    private $keyword;
+
     /**
      * MakeSms constructor.
      * @param AfricasTalkingGateway $gateway
@@ -34,6 +46,8 @@ class SmsRepository implements SmsInterface
     {
         $this->gateway = $gateway;
         $this->inbox = $inbox;
+        $this->keyword = config('sms.keyword');
+        $this->shortCode = config('sms.short_code');
     }
 
     /**Send a message
@@ -71,18 +85,16 @@ class SmsRepository implements SmsInterface
         $text = $request->get('text');
         $date = $request->get('date');
         $id = $request->get('id');
-//        $linkId = $request->get('linkId'); //This works for onDemand subscription products
+        $linkId = $request->get('linkId');
         Log::debug('new sms received');
 
         $sms = new Sms();
-
         $sms->fromNumber = $from;
         $sms->to = $to;
         $sms->message = $text;
         $sms->messageId = $id;
         $sms->date = $date;
-//        $sms->linkId = $linkId;
-
+        $sms->linkId = $linkId;
         $sms->save();
 
         Log::debug('new sms saved');
@@ -95,7 +107,6 @@ class SmsRepository implements SmsInterface
     public function save(Request $request)
     {
         $sms = new Message();
-
         $sms->phoneNumber = $request->get('phoneNumber');
         $sms->message = $request->get('message');
         $sms->save();
@@ -106,50 +117,44 @@ class SmsRepository implements SmsInterface
      */
     public function fetch()
     {
-        $this->lastReceivedId();
-
         try {
-            do {
+            $this->lastReceivedId();
+            $results = $this->gateway->fetchMessages($this->lastReceivedId);
 
-                $results = $this->gateway->fetchMessages($this->lastReceivedId);
-
-                foreach ($results as $result) {
-                    Log::debug("Results got");
-
-                    $inbox = new Inbox();
-                    $inbox->fromNumber = $result->from;
-                    Log::debug("phone number from: ".$result->from);
-                    $inbox->to = $result->to;
-                    $inbox->message = $result->text;
-                    $inbox->date = $result->date;
-                    $inbox->linkId = $result->linkId;
-                    $inbox->lastReceivedId = $result->id;
-                    $inbox->save();
-                }
-
-            } while (count($results) > 0);
+            foreach ($results as $result) {
+                $this->inboxMessage($result);
+            }
 
         } catch (AfricasTalkingGatewayException $e) {
             echo "Encountered an error: " . $e->getMessage();
         }
     }
 
-    /**
-     * Get the last received message Id.
+    /**Get the last received message Id.
      *
      */
     private function lastReceivedId()
     {
-        $count = Inbox::count();
-
-        if ($count > 0) {
-            $last = $this->inbox->all()->last();
-            $lastReceivedId = $last->lastReceivedId;
-            Log::debug("LastId: " . $lastReceivedId);
-            $this->lastReceivedId = $lastReceivedId;
+        if (Inbox::count() > 0) {
+            $this->lastReceivedId = $this->inbox->all()->last()->lastReceivedId;
         } else {
-            $lastId = $this->lastReceivedId = 0;
-            Log::debug('Last Id: ' . $lastId);
+            $this->lastReceivedId = 0;
         }
+    }
+
+    /**Save the received message to the database.
+     *
+     * @param $result
+     */
+    private function inboxMessage($result)
+    {
+        $inbox = new Inbox();
+        $inbox->fromNumber = $result->from;
+        $inbox->to = $result->to;
+        $inbox->message = $result->text;
+        $inbox->date = $result->date;
+        $inbox->linkId = $result->linkId;
+        $inbox->lastReceivedId = $result->id;
+        $inbox->save();
     }
 }

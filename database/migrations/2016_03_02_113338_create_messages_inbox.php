@@ -19,7 +19,7 @@ class CreateMessagesInbox extends Migration
             $table->text('message')->nullable();
             $table->string('date')->nullable();
             $table->string('linkId')->nullable();
-            $table->string('lastReceivedId')->nullable();
+            $table->string('lastReceivedId')->unique()->nullable();
             $table->timestamps();
         });
     }

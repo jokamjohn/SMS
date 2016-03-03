@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Jokam\AfricasTalkingGateway;
 use Jokam\Interfaces\SmsInterface;
 use Log;
 
@@ -14,15 +15,20 @@ class SmsController extends Controller
      * @var SmsInterface
      */
     private $sms;
+    /**
+     * @var AfricasTalkingGateway
+     */
+    private $gateway;
 
     /**
      * SmsController constructor.
      * @param SmsInterface $sms
-     *
+     * @param AfricasTalkingGateway $gateway
      */
-    public function __construct(SmsInterface $sms)
+    public function __construct(SmsInterface $sms,AfricasTalkingGateway $gateway)
     {
         $this->sms = $sms;
+        $this->gateway = $gateway;
     }
 
     /**
@@ -32,7 +38,9 @@ class SmsController extends Controller
      */
     public function index()
     {
-        return 'show index';
+        $this->sms->fetch();
+
+        return "done";
     }
 
     /**
