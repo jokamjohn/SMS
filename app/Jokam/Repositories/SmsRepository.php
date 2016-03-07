@@ -189,7 +189,7 @@ class SmsRepository implements SmsInterface
         switch (strtolower($intent)) {
 
             case self::JOB:
-                $this->replyToJobSender($category, $recipient);
+//                $this->replyToJobSender($category, $recipient);
                 break;
 
             case self::TRAINING:
