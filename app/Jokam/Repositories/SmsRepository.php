@@ -7,16 +7,21 @@ use App\Inbox;
 use App\Job;
 use App\Message;
 use App\Sms;
+use App\Subscription as SubscriptionModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Jokam\AfricasTalkingGateway;
 use Jokam\AfricasTalkingGatewayException;
 use Jokam\Interfaces\SmsInterface;
+use Jokam\Subscription;
+use Log;
 
 class SmsRepository implements SmsInterface
 {
     const JOB = 'job';
     const TRAINING = 'training';
+    const SUBSCRIBE = 'sub';
+    const UNSUBSCRIBE = 'unsub';
 
     private $lastReceivedId;
     /**
@@ -44,20 +49,26 @@ class SmsRepository implements SmsInterface
      * @var Job
      */
     private $job;
+    /**
+     * @var Subscription
+     */
+    private $subscription;
 
     /**
      * MakeSms constructor.
      * @param AfricasTalkingGateway $gateway
      * @param Inbox $inbox
      * @param Job $job
+     * @param Subscription $subscription
      */
-    public function __construct(AfricasTalkingGateway $gateway, Inbox $inbox, Job $job)
+    public function __construct(AfricasTalkingGateway $gateway, Inbox $inbox, Job $job,Subscription $subscription)
     {
         $this->gateway = $gateway;
         $this->inbox = $inbox;
         $this->keyword = config('sms.keyword');
         $this->shortCode = config('sms.short_code');
         $this->job = $job;
+        $this->subscription = $subscription;
     }
 
     /**Send a message
@@ -183,21 +194,28 @@ class SmsRepository implements SmsInterface
         $message = $request->get('text');
         $messageArray = explode(' ', $message);
         $intent = $messageArray[1];
-        $category = $messageArray[2];
         $recipient = $request->get('from');
 
-        switch (strtolower($intent)) {
+            switch (strtolower($intent)) {
 
-            case self::JOB:
-                $this->replyToJobSender($category, $recipient);
-                break;
+                case self::JOB:
+                    $this->processJobRequest($messageArray, $recipient);
+                    break;
 
-            case self::TRAINING:
-                break;
+                case self::TRAINING:
+                    break;
 
-            default:
+                case self::SUBSCRIBE:
+                    $this->saveSubscription($recipient);
+                    break;
 
-        }
+                case self::UNSUBSCRIBE:
+                    break;
+
+                default:
+
+            }
+
     }
 
     /**Reply to the person who wants information about a specific job category.
@@ -212,9 +230,49 @@ class SmsRepository implements SmsInterface
             ->orderBy('id', 'desc')
             ->take(5)->get();
 
-        foreach ($jobs as $job) {
-            $message = "Job is $job->jobType, located at $job->location, contact $job->contact on $job->contactName, positions available $job->positions";
+        if(count($jobs) > 0)
+        {
+            foreach ($jobs as $job) {
+                $message = "Job is $job->jobType, located at $job->location, contact $job->contact on $job->contactName, positions available $job->positions";
+//            $this->send($recipient, $message);
+                Log::debug("msg sent: ".$message);
+            }
+        }
+        else {
+            $message = "Sorry no jobs matching your category, try another category";
+            Log::debug("msg sent: ".$message);
+        }
+
+    }
+
+    /**
+     * @param $recipient
+     */
+    private function saveSubscription($recipient)
+    {
+        $result = $this->subscription->subscribe($recipient);
+        $subscription = new SubscriptionModel();
+        $subscription->number = $recipient;
+        $subscription->status = $result->status;
+        $subscription->description = $result->description;
+        $subscription->save();
+        Log::debug($recipient . ' is subscribed');
+    }
+
+    /**Process the job request.
+     *
+     * @param $messageArray
+     * @param $recipient
+     */
+    private function processJobRequest($messageArray, $recipient)
+    {
+        if (isset($messageArray[2])) {
+            $category = $messageArray[2];
+            $this->replyToJobSender($category, $recipient);
+        } else {
+            $message = 'Job category missing try sending: ' . "<keyword> job <category>";
             $this->send($recipient, $message);
+            Log::debug("no job category message: " . $message);
         }
     }
 

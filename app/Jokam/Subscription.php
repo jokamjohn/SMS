@@ -49,11 +49,7 @@ class Subscription
     public function subscribe($phoneNumber)
     {
         try {
-            $result = $this->gateway->createSubscription($phoneNumber, $this->shortCode, $this->keyword);
-
-            $message = 'status: ' . $result->status . ' description: ' . $result->description;
-
-            return $message;
+            return $this->gateway->createSubscription($phoneNumber, $this->shortCode, $this->keyword);
 
         } catch (AfricasTalkingGatewayException $e) {
 
