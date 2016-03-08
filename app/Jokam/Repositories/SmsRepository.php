@@ -234,7 +234,7 @@ class SmsRepository implements SmsInterface
         {
             foreach ($jobs as $job) {
                 $message = "Job is $job->jobType, located at $job->location, contact $job->contact on $job->contactName, positions available $job->positions";
-//            $this->send($recipient, $message);
+            $this->send($recipient, $message);
                 Log::debug("msg sent: ".$message);
             }
         }
