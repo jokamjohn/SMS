@@ -61,7 +61,7 @@ class SmsRepository implements SmsInterface
      * @param Job $job
      * @param Subscription $subscription
      */
-    public function __construct(AfricasTalkingGateway $gateway, Inbox $inbox, Job $job,Subscription $subscription)
+    public function __construct(AfricasTalkingGateway $gateway, Inbox $inbox, Job $job, Subscription $subscription)
     {
         $this->gateway = $gateway;
         $this->inbox = $inbox;
@@ -196,25 +196,25 @@ class SmsRepository implements SmsInterface
         $intent = $messageArray[1];
         $recipient = $request->get('from');
 
-            switch (strtolower($intent)) {
+        switch (strtolower($intent)) {
 
-                case self::JOB:
-                    $this->processJobRequest($messageArray, $recipient);
-                    break;
+            case self::JOB:
+                $this->processJobRequest($messageArray, $recipient);
+                break;
 
-                case self::TRAINING:
-                    break;
+            case self::TRAINING:
+                break;
 
-                case self::SUBSCRIBE:
-                    $this->saveSubscription($recipient);
-                    break;
+            case self::SUBSCRIBE:
+                $this->saveSubscription($recipient);
+                break;
 
-                case self::UNSUBSCRIBE:
-                    break;
+            case self::UNSUBSCRIBE:
+                break;
 
-                default:
+            default:
 
-            }
+        }
 
     }
 
@@ -230,17 +230,15 @@ class SmsRepository implements SmsInterface
             ->orderBy('id', 'desc')
             ->take(5)->get();
 
-        if(count($jobs) > 0)
-        {
+        if (count($jobs) > 0) {
             foreach ($jobs as $job) {
                 $message = "Job is $job->jobType, located at $job->location, contact $job->contact on $job->contactName, positions available $job->positions";
-            $this->send($recipient, $message);
-                Log::debug("msg sent: ".$message);
+                $this->send($recipient, $message);
+                Log::debug("msg sent: " . $message);
             }
-        }
-        else {
+        } else {
             $message = "Sorry no jobs matching your category, try another category";
-            Log::debug("msg sent: ".$message);
+            $this->send($recipient,$message);
         }
 
     }
